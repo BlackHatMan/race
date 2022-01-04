@@ -1,0 +1,44 @@
+button {
+  width: 100px;
+  border: 1px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+}
+span {
+  margin: 0 20px;
+  font-size: 20px;
+  font-weight: 900;
+  color: burlywood;
+}
+.race {
+  border-bottom: 5px dashed forestgreen;
+}
+.track {
+  display: flex;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.btn {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  color: red;
+  font-size: 28px;
+  font-weight: 900;
+}
+.road {
+  position: relative;
+  height: 100px;
+  width: 80%;
+}
+.car {
+  position: absolute;
+}
+.car-img {
+  height: 100px;
+  width: 150px;
+}
