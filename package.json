@@ -1,8 +1,8 @@
 {
-  "name": "race", 
-  "scripts": { 
+  "name": "race",
+  "scripts": {
     "build": "webpack",
-    "start": "webpack serve --open"
+    "start": "webpack serve"
   },
   "author": "Viktor",
   "license": "ISC",

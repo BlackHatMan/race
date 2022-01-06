@@ -23,24 +23,26 @@ export class Track {
     this.road = new Road();
     this.distance = 0
   }
-  renderTrack(color) {
-    this.track.appendChild(this.road.createRoad(color))
+  renderTrack(color, id) {
+    this.track.appendChild(this.road.createRoad(color, id))
     this.start.addEventListener('click', () => this.driveTrack())
     return this.track;
   }
 
   driveTrack() {
-    const delay = (n) => {
+    this.start.disabled = true;
+    const delay = (time) => {
       return new Promise(res => {
-        let tm = setTimeout(() => res(tm), n);
+        let tm = setTimeout(() => res(tm), time);
       })
     }
     const fd = async () => {
-      for (let i = 0; i < 200; i++) {
-        await delay(20)
+      for (let i = 0; i < 250; i++) {
+        await delay(5)
         this.distance++
         this.road.start(this.distance)
       }
+      this.start.disabled = false
     }
 
     return fd()

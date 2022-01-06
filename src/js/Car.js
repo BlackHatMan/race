@@ -1,4 +1,4 @@
-import { carSvg } from './assets/carSvg';
+import { carSvg } from '../assets/carSvg';
 
 export class Car {
   constructor() {
@@ -8,8 +8,9 @@ export class Car {
 
   }
 
-  createCar(color) {
+  createCar(color, id) {
     this.car.style.fill = color
+    this.car.id = id
     return this.car
   }
 

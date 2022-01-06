@@ -1,9 +1,5 @@
-import { Race } from './Race';
+import { Application } from './js/Application';
 import './style.css';
 
-const main = document.querySelector('.main');
-
-const race = new Race();
-const race1 = new Race();
-main.appendChild(race.renderRace('green', 'Tesla'));
-main.appendChild(race1.renderRace('red', 'Jiga'));
+const App = new Application()
+App.render()
