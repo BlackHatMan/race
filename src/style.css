@@ -33,10 +33,13 @@ span {
   font-size: 28px;
   font-weight: 900;
 }
-.road {
+.btn:disabled {
+  background-color: grey;
+}
+.car-container {
   position: relative;
   height: 100px;
-  width: 80%;
+  width: 1000px;
 }
 .car {
   position: absolute;
@@ -44,4 +47,13 @@ span {
 .car-img {
   height: 100px;
   width: 150px;
+}
+.finish {
+  position: absolute;
+  width: 60px;
+  background-size: cover;
+  background-image: url('./assets/flag.png');
+  height: 70px;
+  right: 120px;
+  bottom: 10px;
 }
