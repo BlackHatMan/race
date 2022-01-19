@@ -21,11 +21,6 @@ export class CarContainer extends Car {
   start(distance: number) {
     this.carContainer.appendChild(this.drive(distance))
 
-    let a = this.finish.getBoundingClientRect().right + 15
-    let b = this.car.getBoundingClientRect().left
-    if (a < b) {
-      console.log(" ~ left hi hi ih ih hi")
-    }
 
     return this.carContainer
   }

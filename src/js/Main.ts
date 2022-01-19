@@ -1,8 +1,12 @@
 import { Controls } from './Controls';
 import { Garage } from './Garage';
-
+import { createCar, getCars, removeCar, startEngine, updateCar } from './api/api'
 type setUpdateId = (id: number) => void
-
+type initialData = {
+  name: string,
+  color: string,
+  id: number
+}
 export class Main extends Controls {
 
   main: HTMLDivElement;
@@ -19,15 +23,14 @@ export class Main extends Controls {
     this.main = document.createElement('div')
     this.main.className = 'main'
     this.countCar = document.createElement('h1')
-    this.id = 0
     this.updateID = 0
     this.main.appendChild(this.controls)
     this.main.appendChild(this.countCar)
     this.garages = []
 
     this.removeGarage = (id: number) => {
+      removeCar(id)
       this.garages.find(el => el.id === id).removeItemGarage()
-
       this.garages = this.garages.filter(el => el.id !== id)
       this.countCar.textContent = this.garages.length.toString()
     }
@@ -37,39 +40,52 @@ export class Main extends Controls {
     }
 
     this.updateBtn = () => {
-      this.garages.find(el => el.id === this.updateID)
-        .updateCar(this.colorPickerUpdate.value, this.modelUpdateName.value)
+      updateCar(this.updateID, this.colorPickerUpdate.value, this.modelUpdateName.value)
+      this.garages.find(el => el.id === this.updateID).updateCar(this.colorPickerUpdate.value, this.modelUpdateName.value)
       this.modelUpdateName.value = ''
       this.modelUpdateName.disabled = true
       this.btnUpdateTrack.disabled = true
     }
   }
-  startAll () {
+
+  startAll = () => {
     this.garages.forEach((el) => el.race.startRace())
     this.btnStartAll.disabled = true
     this.btnResetAll.disabled = false
   }
-  reset () {
+
+  reset = () => {
     this.garages.forEach((el) => el.race.stopRace())
     this.btnStartAll.disabled = false
-
   }
 
-  createGarage() {
-    const instGarage = new Garage(this.btnUpdateTrack, this.modelUpdateName, this.removeGarage, this.setUpdateId, this.modelName.value,
-      this.colorPickerCreate.value, this.id)
-
+  createGarage = () => {
     if (this.modelName.value) {
-      this.main.appendChild(instGarage.renderGarage())
-      this.modelName.value = ''
-      this.id++
 
+      createCar(this.modelName.value, this.colorPickerCreate.value)
+      const instGarage = new Garage(this.btnUpdateTrack, this.modelUpdateName, this.removeGarage, this.setUpdateId, this.modelName.value,
+        this.colorPickerCreate.value, this.garages.length + 1)
+
+      this.main.appendChild(instGarage.renderGarage())
+
+      this.modelName.value = ''
       this.garages.push(instGarage)
       this.countCar.textContent = this.garages.length.toString()
     }
+    console.log(this.garages)
   }
 
-  render() {
+  render(initialData: Array<initialData>) {
+
+    initialData.forEach((el: initialData) => {
+      const instGarage = new Garage(this.btnUpdateTrack, this.modelUpdateName, this.removeGarage, this.setUpdateId, el.name,
+        el.color, el.id)
+      this.garages.push(instGarage)
+      this.main.appendChild(instGarage.renderGarage())
+
+      this.countCar.textContent = this.garages.length.toString()
+    })
+
     return document.body.appendChild(this.main)
   }
 }

@@ -54,7 +54,7 @@ export class Garage {
     this.garage.appendChild(this.title);
 
 
-    this.race = new Race(color)
+    this.race = new Race(color, this.id)
   }
 
   renderGarage() {

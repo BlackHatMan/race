@@ -1,3 +1,4 @@
+
 button {
   width: 100px;
   border: 1px solid black;
@@ -17,7 +18,7 @@ span {
 .track {
   display: flex;
 }
-.main-control{
+.main-control {
   max-width: 400px;
 }
 .controls {
@@ -27,10 +28,10 @@ span {
 }
 
 .btn {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   color: red;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 900;
 }
 .btn:disabled {
@@ -38,22 +39,22 @@ span {
 }
 .car-container {
   position: relative;
-  height: 100px;
+  height: 65px;
   width: 1000px;
 }
 .car {
   position: absolute;
 }
 .car-img {
-  height: 100px;
-  width: 150px;
+  height: 80px;
+  width: 110px;
 }
 .finish {
   position: absolute;
   width: 60px;
   background-size: cover;
-  background-image: url('./assets/flag.png');
-  height: 70px;
+  background-image: url("./assets/flag.png");
+  height: 50px;
   right: 120px;
   bottom: 10px;
 }

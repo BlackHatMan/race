@@ -10,7 +10,11 @@ export class Controls {
   btnStartAll: HTMLButtonElement
   btnResetAll: HTMLButtonElement
   btnGenerateRnd: HTMLButtonElement
+
   reset: () => void
+  startAll: () => void
+  updateBtn: () => void
+  createGarage: () => void
 
   constructor() {
     this.controls = document.createElement('div')
@@ -58,17 +62,5 @@ export class Controls {
     this.controls.appendChild(this.btnResetAll)
     this.controls.appendChild(this.btnGenerateRnd)
 
-
-
   }
-  startAll(): any {
-    throw new Error("Method not implemented.")
-  }
-  updateBtn(): any {
-    throw new Error("Method not implemented.")
-  }
-  createGarage(): any {
-    throw new Error("Method not implemented.")
-  }
-
 }

@@ -1,3 +1,5 @@
+
+import { startEngine, startError } from "./api/api"
 import { CarContainer } from "./CarContainer"
 
 export class Race {
@@ -9,14 +11,14 @@ export class Race {
   color: string
   carContainer: CarContainer
   check: boolean
-
-  constructor(color: string) {
+  id: number
+  constructor(color: string, id: number) {
 
     this.race = document.createElement('div')
     this.race.classList.add('track')
     this.controls = document.createElement('div')
     this.controls.classList.add('controls')
-
+    this.id = id
     this.start = document.createElement('button')
     this.stop = document.createElement('button')
     this.start.classList.add('btn', 'start')
@@ -52,25 +54,27 @@ export class Race {
     this.check = true
   }
 
-  startRace() {
+  async startRace() {
+
+    const resp = await startEngine(this.id)
+
     this.check = false
     this.stop.disabled = false
     this.start.disabled = true;
+
     const delay = (time: number) => {
-      return new Promise(res => {
-        let tm: any = setTimeout(() => res(tm), time);   // TODO any type
-      })
+      return new Promise<void>(res => setTimeout(() => res(), time));
     }
 
-    const fd = async () => {
-      for (let i = 0; i < 300; i++) {
-        if(this.check) break
-        await delay(0)
-        this.distance += 3
+    const drive = async () => {
+      for (let i = 0; i < 450; i++) {
+        if (this.check) break
+        await delay(1)
+        this.distance += 2
         this.carContainer.start(this.distance)
       }
     }
-    return fd()
+    return drive()
 
   }
 }
