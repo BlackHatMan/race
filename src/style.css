@@ -6,6 +6,9 @@ button {
   cursor: pointer;
   margin: 5px;
 }
+input {
+  margin: 0 5px;
+}
 span {
   margin: 0 20px;
   font-size: 20px;
@@ -13,7 +16,7 @@ span {
   color: burlywood;
 }
 .race {
-  border-bottom: 5px dashed forestgreen;
+  border-bottom: 5px dashed black;
 }
 .track {
   display: flex;
@@ -40,7 +43,7 @@ span {
 .car-container {
   position: relative;
   height: 65px;
-  width: 1000px;
+  width: 85%;
 }
 .car {
   position: absolute;
@@ -55,6 +58,6 @@ span {
   background-size: cover;
   background-image: url("./assets/flag.png");
   height: 50px;
-  right: 120px;
+  right: 10%;
   bottom: 10px;
 }

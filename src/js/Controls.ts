@@ -1,5 +1,4 @@
 export class Controls {
-
   controls: HTMLDivElement
   modelName: HTMLInputElement
   modelUpdateName: HTMLInputElement
@@ -10,12 +9,10 @@ export class Controls {
   btnStartAll: HTMLButtonElement
   btnResetAll: HTMLButtonElement
   btnGenerateRnd: HTMLButtonElement
-
   reset: () => void
   startAll: () => void
   updateBtn: () => void
   createGarage: () => void
-
   constructor() {
     this.controls = document.createElement('div')
     this.controls.classList.add('main-control')

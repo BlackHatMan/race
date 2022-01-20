@@ -2,19 +2,19 @@ import { carSvg } from '../assets/carSvg';
 
 export class Car {
   car: HTMLDivElement;
-  constructor() {
+  constructor(color: string) {
     this.car = document.createElement('div')
     this.car.classList.add('car')
+
+    this.car.style.fill = color
     this.car.innerHTML = carSvg();
   }
 
-  createCar(color: string) {
-    this.car.style.fill = color
+  createCar() {
     return this.car
   }
 
-  drive(distance: number) {
-    this.car.style.left = `${distance}px`
-    return this.car
+  changeColor(color: string) {
+    this.car.style.fill = color
   }
 }

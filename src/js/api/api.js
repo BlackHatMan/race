@@ -46,8 +46,7 @@ export const startEngine = async (id) => {
 }
 
 export const startError = async (id) => {
-  const err = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=drive`, {
+  return await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=drive`, {
     method: 'PATCH'
-  }).then(st => console.log(st.status === false ? 'errrrrrr' : 'null'))
-
+  })
 }

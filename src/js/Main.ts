@@ -1,6 +1,6 @@
 import { Controls } from './Controls';
 import { Garage } from './Garage';
-import { createCar, getCars, removeCar, startEngine, updateCar } from './api/api'
+import { createCar, removeCar, updateCar } from './api/api'
 type setUpdateId = (id: number) => void
 type initialData = {
   name: string,
@@ -49,9 +49,12 @@ export class Main extends Controls {
   }
 
   startAll = () => {
-    this.garages.forEach((el) => el.race.startRace())
+    const arrayTime = this.garages.map((el) => el.race.startRace())
+    console.log("🚀 ~ file: Main.ts ~ line 53 ~ Main ~ arrayTime", arrayTime)
     this.btnStartAll.disabled = true
     this.btnResetAll.disabled = false
+
+    Promise.race(arrayTime).then(resolve => console.log(resolve))
   }
 
   reset = () => {
