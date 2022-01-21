@@ -61,3 +61,13 @@ span {
   right: 10%;
   bottom: 10px;
 }
+.winner {
+  position: absolute;
+  z-index: 100;
+  top: 45%;
+  left: 35%;
+  font-size: 32px;
+  font-weight: 900;
+  color: red;
+  text-shadow: 1px 1px 2px black, 0 0 1em red;
+}

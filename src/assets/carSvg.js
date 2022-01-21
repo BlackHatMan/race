@@ -1,5 +1,4 @@
-
-export const carSvg = () => `<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+const carSvg = () => `<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0"
   xmlns="http://www.w3.org/2000/svg" class="car-img" viewBox="0 0 1280.000000 640.000000" preserveAspectRatio="xMidYMid meet">
@@ -97,3 +96,4 @@ l-15 -73 3006 7 c1653 4 3007 8 3009 9 1 1 -8 37 -20 81 -19 67 -22 105 -22
 61 239 98 16 10 -216 242 -234 235z"/>
   </g>
 </svg>`;
+export default carSvg;
