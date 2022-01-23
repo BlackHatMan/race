@@ -19,7 +19,7 @@ class Controls {
 
   btnGenerateRnd: HTMLButtonElement;
 
-  reset: () => void;
+  resetAll: () => void;
 
   startAll: () => void;
 
@@ -55,7 +55,7 @@ class Controls {
 
     this.btnResetAll = document.createElement('button');
     this.btnResetAll.textContent = 'RESET';
-    this.btnResetAll.addEventListener('click', () => this.reset());
+    this.btnResetAll.addEventListener('click', () => this.resetAll());
     this.btnResetAll.disabled = true;
 
     this.btnGenerateRnd = document.createElement('button');

@@ -27,7 +27,9 @@ class Race {
 
   finishTime: string;
 
-  constructor(color: string, id: number) {
+  model: string;
+
+  constructor(color: string, id: number, model: string) {
     this.race = document.createElement('div');
     this.race.classList.add('track');
     this.controls = document.createElement('div');
@@ -45,7 +47,7 @@ class Race {
     this.controls.appendChild(this.start);
     this.controls.appendChild(this.stop);
     this.race.appendChild(this.controls);
-
+    this.model = model;
     this.car = new Car(color);
 
     this.carContainer = document.createElement('div');
@@ -73,20 +75,27 @@ class Race {
     this.anime.cancel();
     this.start.disabled = false;
     this.stop.disabled = true;
+
+    return new Promise<void>((response) => {
+      response();
+    });
   }
 
   async startRace() {
     const resp = await startEngine(this.id);
-    const duration = Math.floor(resp.distance / resp.velocity);
-
-    startError(this.id).then((res) => ((res.status !== 200) ? this.anime.pause() : null));
+    startError(this.id).then((res) => {
+      if (res.status === 500) {
+        this.anime.pause();
+      }
+    });
+    const duration = Math.round(resp.distance / resp.velocity);
     this.stop.disabled = false;
     this.start.disabled = true;
 
     return new Promise((resolve: (res: string) => void) => {
-      this.anime = this.car.car.animate([{ left: 0 }, { left: '90%' }], { duration, fill: 'forwards' });
+      this.anime = this.car.car.animate([{ left: 0 }, { left: 'calc(90% - 25px)' }], { duration, fill: 'forwards' });
       this.anime.onfinish = () => {
-        this.finishTime = `Winner time ${this.anime.currentTime / 1000} seconds!!!!!`;
+        this.finishTime = `Winner ${this.model} time ${this.anime.currentTime / 1000} seconds!!!!!`;
         resolve(this.finishTime);
       };
     });

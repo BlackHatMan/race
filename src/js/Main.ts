@@ -1,19 +1,15 @@
 import Controls from './Controls';
 import Garage from './Garage';
-import { createCar, removeCar, updateCar } from './api/api';
+import {
+  createCar, removeCar, updateCar, getCars, InitialData,
+} from './api/api';
 
-type SetUpdateId = (id: number) => void;
-type InitialData = {
-  name: string,
-  color: string,
-  id: number
-};
 class Main extends Controls {
   main: HTMLDivElement;
 
   countCar: HTMLHeadingElement;
 
-  garages: Array<Garage>;
+  page: Garage[];
 
   id: number;
 
@@ -21,39 +17,82 @@ class Main extends Controls {
 
   removeGarage: (id: number) => void;
 
-  setUpdateId: SetUpdateId;
+  setUpdateId: (id: number) => void;
 
   updateBtn: () => void;
 
-  winner: HTMLDivElement;
+  nextPage: () => void;
+
+  prevPage: () => void;
+
+  winnerPopup: HTMLDivElement;
+
+  next: HTMLButtonElement;
+
+  prev: HTMLButtonElement;
+
+  currentPageLabel: HTMLParagraphElement;
+
+  currentPage: number;
+
+  totalCount: number;
+
+  wrapper: HTMLDivElement;
 
   constructor() {
     super();
     this.main = document.createElement('div');
+    this.wrapper = document.createElement('div');
+    this.main.className = 'main';
     this.main.className = 'main';
     this.countCar = document.createElement('h1');
+    this.currentPage = 1;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.totalCount;
     this.updateID = 0;
+    this.page = [];
+    this.winnerPopup = document.createElement('div');
+    this.winnerPopup.classList.add('winnerPopup');
+    this.prev = document.createElement('button');
+    this.next = document.createElement('button');
+    this.currentPageLabel = document.createElement('h3');
+    this.currentPageLabel.textContent = 'Page # 1';
+    this.prev.textContent = 'prev page';
+    this.next.textContent = 'next page';
+    this.next.addEventListener('click', () => this.nextPage());
+    this.prev.addEventListener('click', () => this.prevPage());
     this.main.appendChild(this.controls);
     this.main.appendChild(this.countCar);
-    this.garages = [];
-    this.winner = document.createElement('div');
-    this.winner.classList.add('winner');
+    this.main.appendChild(this.winnerPopup);
+    this.main.appendChild(this.prev);
+    this.main.appendChild(this.next);
+    this.main.appendChild(this.currentPageLabel);
+    this.main.appendChild(this.wrapper);
 
-    this.main.appendChild(this.winner);
     this.removeGarage = (id: number) => {
       removeCar(id);
-      this.garages.find((el) => el.id === id).removeItemGarage();
-      this.garages = this.garages.filter((el) => el.id !== id);
-      this.countCar.textContent = `GARAGE (${this.garages.length})`;
+      this.page.find((el) => el.id === id).removeItemGarage();
+      this.page = this.page.filter((el) => el.id !== id);
+      this.countCar.textContent = `GARAGE (${this.totalCount -= 1})`;
     };
 
     this.setUpdateId = (id) => {
       this.updateID = id;
     };
 
+    this.nextPage = () => {
+      this.currentPageLabel.textContent = `Page # ${this.currentPage += 1}`;
+      this.renderCuretPage(this.currentPage);
+    };
+
+    this.prevPage = () => {
+      this.currentPageLabel.textContent = `Page # ${this.currentPage -= 1}`;
+      this.renderCuretPage(this.currentPage);
+    };
+
     this.updateBtn = () => {
       updateCar(this.updateID, this.colorPickerUpdate.value, this.modelUpdateName.value);
-      this.garages.find((el) => el.id === this.updateID)
+      this.page.find((el) => el.id === this.updateID)
         .updateCar(this.colorPickerUpdate.value, this.modelUpdateName.value);
       this.modelUpdateName.value = '';
       this.modelUpdateName.disabled = true;
@@ -62,45 +101,51 @@ class Main extends Controls {
   }
 
   startAll = () => {
-    const arrayTime: Array<Promise<string>> = this.garages.map((el) => el.race.startRace());
+    const arrayTime: Array<Promise<string>> = this.page.map((el) => el.race.startRace());
     this.btnStartAll.disabled = true;
-    this.btnResetAll.disabled = false;
-
     Promise.race(arrayTime).then((resolve) => {
-      this.winner.textContent = resolve;
+      this.winnerPopup.textContent = resolve;
       setTimeout(() => {
-        this.winner.innerText = '';
-      }, 3500);
+        this.btnResetAll.disabled = false;
+        this.winnerPopup.innerText = '';
+      }, 4000);
     });
   };
 
-  reset = () => {
-    this.garages.forEach((el) => el.race.stopRace());
+  resetAll = async () => {
     this.btnStartAll.disabled = false;
+    const arrayTime: Array<Promise<void>> = this.page.map((el) => el.race.stopRace());
+    await Promise.all(arrayTime);
   };
 
-  createGarage = () => {
+  createGarage = async () => {
     if (this.modelName.value) {
-      createCar(this.modelName.value, this.colorPickerCreate.value);
+      const response = await createCar(this.modelName.value, this.colorPickerCreate.value);
+
       const instGarage = new Garage(
         this.btnUpdateTrack,
         this.modelUpdateName,
         this.removeGarage,
         this.setUpdateId,
-        this.modelName.value,
-        this.colorPickerCreate.value,
-        this.garages.length + 1,
+        response.name,
+        response.color,
+        response.id,
       );
 
-      this.main.appendChild(instGarage.renderGarage());
-
+      if (this.page.length < 7) {
+        this.wrapper.appendChild(instGarage.renderGarage());
+      }
       this.modelName.value = '';
-      this.garages.push(instGarage);
-      this.countCar.textContent = `GARAGE (${this.garages.length})`;
+      this.page.push(instGarage); // not page
+      this.countCar.textContent = `GARAGE (${this.totalCount += 1})`;
     }
   };
 
-  render(initialData: Array<InitialData>) {
+  async renderCuretPage(page: number) {
+    this.wrapper.innerHTML = '';
+    const { totalCount, initialData } = await getCars(page);
+    this.totalCount = totalCount;
+
     initialData.forEach((el: InitialData) => {
       const instGarage = new Garage(
         this.btnUpdateTrack,
@@ -111,12 +156,14 @@ class Main extends Controls {
         el.color,
         el.id,
       );
-      this.garages.push(instGarage);
-      this.main.appendChild(instGarage.renderGarage());
-
-      this.countCar.textContent = `GARAGE (${this.garages.length})`;
+      this.page.push(instGarage);
+      this.wrapper.appendChild(instGarage.renderGarage());
+      this.countCar.textContent = `GARAGE (${this.totalCount})`;
     });
+  }
 
+  render() {
+    this.renderCuretPage(this.currentPage);
     return document.body.appendChild(this.main);
   }
 }

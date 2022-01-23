@@ -31,7 +31,7 @@ class Garage {
     id: number,
   ) {
     this.garage = document.createElement('div');
-    this.garage.classList.add('race');
+    this.garage.classList.add('garage');
     this.remove = document.createElement('button');
     this.remove.textContent = 'remove';
     this.select = document.createElement('button');
@@ -59,7 +59,7 @@ class Garage {
     this.garage.appendChild(this.remove);
     this.garage.appendChild(this.select);
     this.garage.appendChild(this.title);
-    this.race = new Race(color, this.id);
+    this.race = new Race(color, this.id, model);
   }
 
   renderGarage() {
