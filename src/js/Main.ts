@@ -4,6 +4,9 @@ import {
   createCar, removeCar, updateCar, getCars, InitialData,
 } from './api/api';
 
+interface IPage {
+  [key: number]: Garage[]
+}
 class Main extends Controls {
   main: HTMLDivElement;
 
@@ -39,6 +42,8 @@ class Main extends Controls {
 
   wrapper: HTMLDivElement;
 
+  cachedPage: IPage;
+
   constructor() {
     super();
     this.main = document.createElement('div');
@@ -47,7 +52,7 @@ class Main extends Controls {
     this.main.className = 'main';
     this.countCar = document.createElement('h1');
     this.currentPage = 1;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.cachedPage = {};
     this.totalCount;
     this.updateID = 0;
     this.page = [];
@@ -68,7 +73,6 @@ class Main extends Controls {
     this.main.appendChild(this.next);
     this.main.appendChild(this.currentPageLabel);
     this.main.appendChild(this.wrapper);
-
     this.removeGarage = (id: number) => {
       removeCar(id);
       this.page.find((el) => el.id === id).removeItemGarage();
@@ -81,13 +85,17 @@ class Main extends Controls {
     };
 
     this.nextPage = () => {
-      this.currentPageLabel.textContent = `Page # ${this.currentPage += 1}`;
-      this.renderCuretPage(this.currentPage);
+      if (this.currentPage < Math.ceil(this.totalCount / 7)) {
+        this.currentPageLabel.textContent = `Page # ${this.currentPage += 1}`;
+        this.renderCuretPage(this.currentPage);
+      }
     };
 
     this.prevPage = () => {
-      this.currentPageLabel.textContent = `Page # ${this.currentPage -= 1}`;
-      this.renderCuretPage(this.currentPage);
+      if (this.currentPage > 1) {
+        this.currentPageLabel.textContent = `Page # ${this.currentPage -= 1}`;
+        this.renderCuretPage(this.currentPage);
+      }
     };
 
     this.updateBtn = () => {
@@ -122,28 +130,34 @@ class Main extends Controls {
     if (this.modelName.value) {
       const response = await createCar(this.modelName.value, this.colorPickerCreate.value);
 
-      const instGarage = new Garage(
-        this.btnUpdateTrack,
-        this.modelUpdateName,
-        this.removeGarage,
-        this.setUpdateId,
-        response.name,
-        response.color,
-        response.id,
-      );
-
       if (this.page.length < 7) {
+        const instGarage = new Garage(
+          this.btnUpdateTrack,
+          this.modelUpdateName,
+          this.removeGarage,
+          this.setUpdateId,
+          response.name,
+          response.color,
+          response.id,
+        );
         this.wrapper.appendChild(instGarage.renderGarage());
+        this.page.push(instGarage);
       }
       this.modelName.value = '';
-      this.page.push(instGarage); // not page
       this.countCar.textContent = `GARAGE (${this.totalCount += 1})`;
     }
   };
 
-  async renderCuretPage(page: number) {
+  async renderCuretPage(pageNumber: number) {
     this.wrapper.innerHTML = '';
-    const { totalCount, initialData } = await getCars(page);
+    this.page = [];
+
+    if (this.cachedPage[pageNumber]) {
+      this.cachedPage[pageNumber].forEach((garageItem) => this.wrapper
+        .appendChild(garageItem.renderGarage()));
+      return;
+    }
+    const { totalCount, initialData } = await getCars(pageNumber);
     this.totalCount = totalCount;
 
     initialData.forEach((el: InitialData) => {
@@ -160,6 +174,9 @@ class Main extends Controls {
       this.wrapper.appendChild(instGarage.renderGarage());
       this.countCar.textContent = `GARAGE (${this.totalCount})`;
     });
+
+    this.cachedPage[pageNumber] = [...this.page];
+    console.log('dsdsd', this.page.length);
   }
 
   render() {

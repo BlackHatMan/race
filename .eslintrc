@@ -16,5 +16,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "rules": {"react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }]}
+  "rules": {"react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
+  "@typescript-eslint/no-unused-expressions": ["off"]
+  }
 }
