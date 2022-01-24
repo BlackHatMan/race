@@ -77,6 +77,7 @@ class Main extends Controls {
       removeCar(id);
       this.page.find((el) => el.id === id).removeItemGarage();
       this.page = this.page.filter((el) => el.id !== id);
+      this.cachedPage[this.currentPage] = [...this.page];
       this.countCar.textContent = `GARAGE (${this.totalCount -= 1})`;
     };
 
@@ -87,14 +88,14 @@ class Main extends Controls {
     this.nextPage = () => {
       if (this.currentPage < Math.ceil(this.totalCount / 7)) {
         this.currentPageLabel.textContent = `Page # ${this.currentPage += 1}`;
-        this.renderCuretPage(this.currentPage);
+        this.renderCurrentPage(this.currentPage);
       }
     };
 
     this.prevPage = () => {
       if (this.currentPage > 1) {
         this.currentPageLabel.textContent = `Page # ${this.currentPage -= 1}`;
-        this.renderCuretPage(this.currentPage);
+        this.renderCurrentPage(this.currentPage);
       }
     };
 
@@ -109,27 +110,29 @@ class Main extends Controls {
   }
 
   startAll = () => {
-    const arrayTime: Array<Promise<string>> = this.page.map((el) => el.race.startRace());
+    const arrayTime: Array<Promise<string>> = this.cachedPage[this.currentPage]
+      .map((el) => el.race.startRace());
     this.btnStartAll.disabled = true;
     Promise.race(arrayTime).then((resolve) => {
       this.winnerPopup.textContent = resolve;
       setTimeout(() => {
         this.btnResetAll.disabled = false;
         this.winnerPopup.innerText = '';
-      }, 4000);
+      }, 3000);
     });
   };
 
   resetAll = async () => {
     this.btnStartAll.disabled = false;
-    const arrayTime: Array<Promise<void>> = this.page.map((el) => el.race.stopRace());
+    const arrayTime: Array<Promise<void>> = this.cachedPage[this.currentPage]
+      .map((el) => el.race.stopRace());
     await Promise.all(arrayTime);
+    this.btnResetAll.disabled = true;
   };
 
   createGarage = async () => {
     if (this.modelName.value) {
       const response = await createCar(this.modelName.value, this.colorPickerCreate.value);
-
       if (this.page.length < 7) {
         const instGarage = new Garage(
           this.btnUpdateTrack,
@@ -142,19 +145,20 @@ class Main extends Controls {
         );
         this.wrapper.appendChild(instGarage.renderGarage());
         this.page.push(instGarage);
+        this.cachedPage[this.currentPage] = [...this.page];
       }
       this.modelName.value = '';
       this.countCar.textContent = `GARAGE (${this.totalCount += 1})`;
     }
   };
 
-  async renderCuretPage(pageNumber: number) {
+  async renderCurrentPage(pageNumber: number) {
     this.wrapper.innerHTML = '';
     this.page = [];
-
-    if (this.cachedPage[pageNumber]) {
+    if (this.cachedPage[pageNumber] && this.cachedPage[pageNumber].length > 6) {
       this.cachedPage[pageNumber].forEach((garageItem) => this.wrapper
         .appendChild(garageItem.renderGarage()));
+      this.page = [...this.cachedPage[pageNumber]];
       return;
     }
     const { totalCount, initialData } = await getCars(pageNumber);
@@ -176,11 +180,10 @@ class Main extends Controls {
     });
 
     this.cachedPage[pageNumber] = [...this.page];
-    console.log('dsdsd', this.page.length);
   }
 
   render() {
-    this.renderCuretPage(this.currentPage);
+    this.renderCurrentPage(this.currentPage);
     return document.body.appendChild(this.main);
   }
 }

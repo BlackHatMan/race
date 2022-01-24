@@ -27,5 +27,7 @@
     "eslint-config-airbnb-typescript": "^16.1.0",
     "lodash": "^4.17.21"
   },
-  "eslintIgnore": ["webpack.config.js"]
+  "eslintIgnore": [
+    "webpack.config.js"
+  ]
 }
