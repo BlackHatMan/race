@@ -27,6 +27,8 @@ class Controls {
 
   createGarage: () => void;
 
+  generateRnd: () => void;
+
   constructor() {
     this.controls = document.createElement('div');
     this.controls.classList.add('main-control');
@@ -59,6 +61,7 @@ class Controls {
     this.btnResetAll.disabled = true;
 
     this.btnGenerateRnd = document.createElement('button');
+    this.btnGenerateRnd.addEventListener('click', () => this.generateRnd());
     this.btnGenerateRnd.textContent = 'GENERATE CARS';
 
     this.controls.appendChild(this.modelName);

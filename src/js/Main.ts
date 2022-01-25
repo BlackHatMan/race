@@ -3,6 +3,8 @@ import Garage from './Garage';
 import {
   createCar, removeCar, updateCar, getCars, InitialData,
 } from './api/api';
+import modelsCars from './api/models-cars';
+import brandsCars from './api/brands-cars';
 
 interface IPage {
   [key: number]: Garage[]
@@ -43,6 +45,8 @@ class Main extends Controls {
   wrapper: HTMLDivElement;
 
   cachedPage: IPage;
+
+  generateRnd: () => void;
 
   constructor() {
     super();
@@ -106,6 +110,17 @@ class Main extends Controls {
       this.modelUpdateName.value = '';
       this.modelUpdateName.disabled = true;
       this.btnUpdateTrack.disabled = true;
+    };
+    this.generateRnd = async () => {
+      const rndPromise = [];
+      for (let i = 0; i < 100; i += 1) {
+        const rnd = Math.floor(Math.random() * 50);
+        const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        const model = `${brandsCars[rnd]} ${modelsCars[rnd]}`;
+        rndPromise.push(createCar(model, randomColor));
+      }
+      await Promise.all(rndPromise);
+      this.render();
     };
   }
 
