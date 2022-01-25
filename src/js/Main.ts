@@ -120,6 +120,9 @@ class Main extends Controls {
         rndPromise.push(createCar(model, randomColor));
       }
       await Promise.all(rndPromise);
+      const { totalCount } = await getCars(1);
+      this.totalCount = totalCount;
+      this.countCar.textContent = `GARAGE (${this.totalCount})`;
       this.render();
     };
   }
